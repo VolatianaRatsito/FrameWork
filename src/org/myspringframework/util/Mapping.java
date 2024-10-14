@@ -1,8 +1,7 @@
-package util;
-
+package org.myspringframework.util;
 public class Mapping {
-    private String nomClasse;
-    private String nomMethode;
+     String nomClasse;
+     String nomMethode;
 
     public Mapping(String nomClasse, String nomMethode) {
         this.nomClasse = nomClasse;
@@ -13,7 +12,15 @@ public class Mapping {
         return nomClasse;
     }
 
+    public void setNomClasse(String nomClasse) {
+        this.nomClasse = nomClasse;
+    }
+
     public String getNomMethode() {
         return nomMethode;
+    }
+
+    public void setNomMethode(String nomMethode) {
+        this.nomMethode = nomMethode;
     }
 }

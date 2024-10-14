@@ -1,4 +1,4 @@
-package util;
+package org.myspringframework.util;
 
 import jakarta.servlet.http.HttpSession;
 

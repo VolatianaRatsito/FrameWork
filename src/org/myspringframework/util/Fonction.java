@@ -1,8 +1,6 @@
-package util;
-
+package org.myspringframework.util;
 import java.lang.annotation.Annotation;
-import annotation.*;
-import util.Mapping;
+import org.mysprint.annotation.*;
 import java.io.*;
 import java.lang.reflect.Modifier;
 import java.util.stream.*;
@@ -11,8 +9,11 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.mysprint.annotation.*;
 public class Fonction {
     public Fonction(){
 
@@ -20,7 +21,8 @@ public class Fonction {
     public static boolean isController(Class<?> c){
         Annotation[] existings = c.getAnnotations();
         for (Annotation annotation : existings) {
-            if (annotation.annotationType().getName().equals("org.myspringframework.annotation.Controller")) {
+            if (annotation.annotationType().getName().equals("org.mysprint.annotation.Controller") || 
+            annotation.annotationType().getName().equals("org.mysprint.annotation.RestApi")) {
                 return true;
             }        
         }
@@ -85,30 +87,36 @@ public class Fonction {
     }
     public Map<String, Mapping> mapControllersToRoutes(List<Class<?>> controllers) throws Exception {
         Map<String, Mapping> routeMap = new HashMap<>();
+        String basePath="";
         for (Class<?> controller : controllers) {
-            Method[] methods = controller.getDeclaredMethods();
-            for (Method method : methods) {
-                if (method.isAnnotationPresent(Get.class)) {
-                    Get mapping = method.getAnnotation(Get.class);
-                    String key = mapping.url().isEmpty() ? mapping.value() : mapping.url(); // Utiliser l'URL s'il est défini, sinon utiliser value()
-                    Mapping mappingInfo = new Mapping(controller.getName(), method.getName());
-                    if (routeMap.containsKey(key)) {
-                        Mapping existingMapping = routeMap.get(key);
-                        Class<?> controllerE = Class.forName(existingMapping.getNomClasse());
-                        throw new Exception("Redondance de l'url '" + key + "' dans la classe " 
-                            + controller.getName() + " pour la méthode " + method.getName() 
-                            + ".\nCette url est déjà déclarée dans la classe " 
-                            + controllerE.getName() + " pour la méthode " 
-                            + existingMapping.getNomMethode() + ".");
-                    } else {
-                        routeMap.put(key, mappingInfo);
+            if (controller.isAnnotationPresent(RestApi.class)) {
+            RestApi restApi = controller.getAnnotation(RestApi.class);
+            basePath = restApi.value();  
+            }
+            
+                Method[] methods = controller.getDeclaredMethods();
+                for (Method method : methods) {
+                    if (method.isAnnotationPresent(GetMapping.class)) {
+                        GetMapping mapping = method.getAnnotation(GetMapping.class);
+                        String key = basePath+mapping.value(); // Supposons que @GetMapping a une valeur pour le chemin
+                        Mapping mappingInfo = new Mapping(controller.getName(), method.getName());
+                        if (routeMap.containsKey(key)) {
+                            Mapping existingMapping = routeMap.get(key);
+                            Class<?> controllerE=Class.forName(existingMapping.getNomClasse());
+                            throw new Exception(" Redondance de l' url'" + key +  " du classe "+controller.getName()+"au niveau du methode :"+method.getName() +".\n" +"Cette url est deja declarer dans la classe : "+controllerE.getName()+" au niveau de methode :"+existingMapping.getNomMethode());
+                        } else {
+                            routeMap.put(key, mappingInfo);
+                        }
+                    }
+                    else if(method.isAnnotationPresent(RestApi.class)){
+
                     }
                 }
-            }
+            basePath="";
+            
         }
         return routeMap;
     }
-    
 
     public Object executeMethod(String nomClasse, String nomMethode) {
     try {
