@@ -1,4 +1,4 @@
-package org.myspringframework.util;
+package org.mysprint.util;
 public class Mapping {
      String nomClasse;
      String nomMethode;

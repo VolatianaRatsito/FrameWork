@@ -1,4 +1,4 @@
-package org.myspringframework.annotation;
+package org.mysprint.annotation;
 import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME) 
 @Target(ElementType.TYPE) 

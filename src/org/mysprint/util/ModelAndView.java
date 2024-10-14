@@ -1,4 +1,4 @@
-package org.myspringframework.util;
+package org.mysprint.util;
 import java.util.*;
 public class ModelAndView {
      String url;

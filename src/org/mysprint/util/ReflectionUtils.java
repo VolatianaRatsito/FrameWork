@@ -1,4 +1,4 @@
-package org.myspringframework.util;
+package org.mysprint.util;
 
 import org.mysprint.annotation.Column;
 import org.mysprint.annotation.ModelAttribute;

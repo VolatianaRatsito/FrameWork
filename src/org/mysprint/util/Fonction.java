@@ -1,4 +1,4 @@
-package org.myspringframework.util;
+package org.mysprint.util;
 import java.lang.annotation.Annotation;
 import org.mysprint.annotation.*;
 import java.io.*;
