@@ -1,11 +1,31 @@
 # FrameWork
-to do list Sprint 12
-- Creer une classe MultiPart : Elle représente un fichier téléchargé avec des propriétés comme le nom du fichier, sa taille, et son contenu.
+Sprint 13 :
+  - Objectif : validation de donnees
+  - Etapes : 
+     - creation des type de validation au choix -> des annotations   
+        - @ReqNotNullired -> le champ ne doit pas etre nul ok 
+        - @Mail -> Le champ doit etre un mail ok  
+        - @Max  -> la valeur ne doit pas depasser la valeur donnee ok 
+        - @Min  ->la valeur ne doit pas etre en dessous de la valeur donnee ok 
 
-- FrontController :
-   - si un des parametres de la methode est annote par MultiPart 
-      - recuperer la valeur par request.getPart()
-      - creer une instance de MultiPart
-      - setter les valeurs dans MultiPart
-      Traitement de fichier : Si vous vouler faire un input de type date, passer en argument de la fonction la classe Multipart et setter les valeurs dedans
-   - tout reste comme avant
+Donc ,j'ai creer une classe validation :
+
+     - creer une methode qui fonctionne comme ceci : 
+        - elle prend en argument un objet
+        - elle recupere l'instance de cet objet
+        - elle recupere les attribut de cette classe
+        - Pour chaque attribut, on recupere les annotations 
+        - si les annotations creer tout a l'heure sont presents sur un fields,
+          - recuperer la valeur assigne a cet attribut 
+          - voir si la condition est satisfaite sinon on l'ajoute a une liste d'erreur 
+        - on retourne la liste des erreurs    
+
+La classe ValidationException améliore la gestion des erreurs dans une application 
+en permettant de capturer des informations spécifiques sur les validations échouées, 
+rendant le processus plus robuste et maintenable.
+
+
+
+
+
+
