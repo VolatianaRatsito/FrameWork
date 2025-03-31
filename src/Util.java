@@ -120,6 +120,4 @@ public class Util {
         
         return fields;
     }
-    
-
 }

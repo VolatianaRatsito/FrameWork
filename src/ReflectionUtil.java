@@ -17,20 +17,31 @@ import jakarta.servlet.http.*;
 public class ReflectionUtil {
 
     public static Object invokeMethodWithRequestParams(String className, String methodName, HttpServletRequest request, HttpServletResponse response) throws Exception {
-    
         Class<?> clazz = Class.forName(className);
         Object object = clazz.getDeclaredConstructor().newInstance();
+    
+        // Validation de l'objet créé
+        List<ValidationException> validationExceptions = Validation.validate(object);
+        if (!validationExceptions.isEmpty()) {
+            // Gérer les exceptions de validation ici, par exemple en les affichant dans le journal ou en les renvoyant dans la réponse
+            for (ValidationException exception : validationExceptions) {
+                System.out.println("Erreur de validation pour le champ " + exception.getFieldName() + ": " + exception.getMessage());
+                // Vous pouvez également lever une exception ou gérer l'erreur comme vous le souhaitez
+            }
+            // Optionnel : vous pouvez choisir de lancer une exception si des validations échouent
+            throw new Exception("Validation failed for object: " + object.getClass().getSimpleName());
+        }
     
         Method method = getMethodWithRequestParams(clazz, methodName, request);
         if (method == null) {
             throw new NoSuchMethodException("No suitable method found for " + methodName);
         }
-        
+    
         if (isRestApiAnnotated(method, request, response, object)) {
             return null; 
         }
-            handleSession(object, request);
-            return invokeMethod(method, object, request);
+        handleSession(object, request);
+        return invokeMethod(method, object, request);
     }
     
     private static boolean isRestApiAnnotated(Method method, HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
